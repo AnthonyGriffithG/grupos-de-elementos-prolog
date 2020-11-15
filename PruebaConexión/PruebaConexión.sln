@@ -1,0 +1,25 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 12.00
+# Visual Studio Version 16
+VisualStudioVersion = 16.0.30711.63
+MinimumVisualStudioVersion = 10.0.40219.1
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "PruebaConexión", "PruebaConexión\PruebaConexión.csproj", "{7C544ECD-7581-4536-BE20-AF33C9C22287}"
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|Any CPU = Debug|Any CPU
+		Release|Any CPU = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{7C544ECD-7581-4536-BE20-AF33C9C22287}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{7C544ECD-7581-4536-BE20-AF33C9C22287}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{7C544ECD-7581-4536-BE20-AF33C9C22287}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{7C544ECD-7581-4536-BE20-AF33C9C22287}.Release|Any CPU.Build.0 = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
+	EndGlobalSection
+	GlobalSection(ExtensibilityGlobals) = postSolution
+		SolutionGuid = {0C7C7EC9-5CA7-4AF0-883B-9F3FE70A5BC8}
+	EndGlobalSection
+EndGlobal

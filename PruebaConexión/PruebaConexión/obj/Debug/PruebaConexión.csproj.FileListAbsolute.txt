@@ -1,0 +1,11 @@
+C:\Users\ExtremeTech Sc\source\repos\PruebaConexión\PruebaConexión\bin\Debug\PruebaConexión.exe.config
+C:\Users\ExtremeTech Sc\source\repos\PruebaConexión\PruebaConexión\bin\Debug\PruebaConexión.exe
+C:\Users\ExtremeTech Sc\source\repos\PruebaConexión\PruebaConexión\bin\Debug\PruebaConexión.pdb
+C:\Users\ExtremeTech Sc\source\repos\PruebaConexión\PruebaConexión\obj\Debug\PruebaConexión.csprojAssemblyReference.cache
+C:\Users\ExtremeTech Sc\source\repos\PruebaConexión\PruebaConexión\obj\Debug\PruebaConexión.Form1.resources
+C:\Users\ExtremeTech Sc\source\repos\PruebaConexión\PruebaConexión\obj\Debug\PruebaConexión.Properties.Resources.resources
+C:\Users\ExtremeTech Sc\source\repos\PruebaConexión\PruebaConexión\obj\Debug\PruebaConexión.csproj.GenerateResource.cache
+C:\Users\ExtremeTech Sc\source\repos\PruebaConexión\PruebaConexión\obj\Debug\PruebaConexión.csproj.CoreCompileInputs.cache
+C:\Users\ExtremeTech Sc\source\repos\PruebaConexión\PruebaConexión\obj\Debug\PruebaConexión.exe
+C:\Users\ExtremeTech Sc\source\repos\PruebaConexión\PruebaConexión\obj\Debug\PruebaConexión.pdb
+C:\Users\ExtremeTech Sc\source\repos\PruebaConexión\PruebaConexión\obj\Debug\PruebaConexión.csproj.CopyComplete

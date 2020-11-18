@@ -19,21 +19,27 @@ namespace PruebaConexión
         DataTable dt = new DataTable();
         private int XY;
         public List<List<int>> ListaPosiciones = new List<List<int>>();
+        
         public Form1()
         {
             InitializeComponent();
         }
         private void clickDataTable(object sender, DataGridViewCellEventArgs e)
         {
+
             DataGridViewCell cell = dataGridView1.Rows[e.RowIndex].Cells[e.ColumnIndex];
-            if (cell.Value == "x")
+            if (cell.Value == "X")
             {
                 cell.Value = " ";
+                cell.Style.BackColor = Color.White;
             }
             else
             {
-                cell.Value = "x";
+                cell.Value = "X";
+                cell.Style.BackColor = Color.Black;
+
             }
+            
         }
         private void Form1_Load(object sender, EventArgs e)
         {
@@ -55,6 +61,7 @@ namespace PruebaConexión
             
             int numero = (int)numericUpDown1.Value;
             XY = numero;
+            dataGridView1.AutoSizeColumnsMode = DataGridViewAutoSizeColumnsMode.DisplayedCells;
             for (int i = 0; i < numero; i++)
             {
                 dt.Columns.Add();
@@ -89,7 +96,7 @@ namespace PruebaConexión
 
         private void button1_Click_1(object sender, EventArgs e)
         {
-            File.Delete("C:\\Users\\ExtremeTech Sc\\source\\repos\\PruebaConexión\\PruebaConexión\\bin\\Debug\\bdf.pl");
+            File.Delete("C:\\Users\\ExtremeTech Sc\\source\\repos\\PruebaConexión\\PruebaConexión\\bin\\Debug\\BDPuntos.pl");
 
             string docPath = "C:\\Users\\ExtremeTech Sc\\source\\repos\\PruebaConexión\\PruebaConexión\\bin\\Debug";
 
@@ -103,10 +110,14 @@ namespace PruebaConexión
                 for (int j = 0; j < XY; j++)
                 {
                     dt.Rows[i][j] = " ";
+                    dataGridView1.Rows[i].Cells[j].Style.BackColor = Color.White;
+
                 }
             }
             Random rnd = new Random();
             int cantRandoms = rnd.Next(0, XY*XY+1);
+            List<List<int>> noDupes = new List<List<int>>();
+
             for (int i = 0; i < cantRandoms; i++)
             {
                 List<int> posicion = new List<int>();
@@ -116,18 +127,40 @@ namespace PruebaConexión
                 posicion.Add(x);
                 posicion.Add(y);
 
-                using (StreamWriter outputFile = new StreamWriter(Path.Combine(docPath, "BDPuntos.pl"), true))
-                {
-                    outputFile.WriteLine("punto("+x+","+y+").");
-                }
-
                 ListaPosiciones.Add(posicion);
                 dt.Rows[x][y] = "X";
+                dataGridView1.Rows[x].Cells[y].Style.BackColor = Color.Black;
+
+            }
+
+            for (int i = 0; i < XY; i++)
+            {
+                for (int j = 0; j < XY; j++)
+                {
+
+                    if (dt.Rows[i][j].ToString() == "X")
+                    {
+                        using (StreamWriter outputFile = new StreamWriter(Path.Combine(docPath, "BDPuntos.pl"), true))
+                        {
+                            outputFile.WriteLine("punto(" + j + "," + i + ").");
+                        }
+                    }
+                }
             }
         }
 
         private void button3_Click(object sender, EventArgs e)
         {
+            File.Delete("C:\\Users\\ExtremeTech Sc\\source\\repos\\PruebaConexión\\PruebaConexión\\bin\\Debug\\BDPuntos.pl");
+
+            string docPath = "C:\\Users\\ExtremeTech Sc\\source\\repos\\PruebaConexión\\PruebaConexión\\bin\\Debug";
+
+            using (StreamWriter outputFile = new StreamWriter(Path.Combine(docPath, "BDPuntos.pl"), true))
+            {
+                outputFile.WriteLine(":- dynamic(punto/2).");
+            }
+
+            /*
             PlQuery consulta = new PlQuery("existe(3,2).");
             Console.WriteLine(consulta.SolutionVariables);
 
@@ -135,6 +168,22 @@ namespace PruebaConexión
                 Console.WriteLine("fue true");
             else
                 Console.WriteLine("fue false");
+            */
+
+            for (int i = 0; i < XY; i++)
+            {
+                for (int j = 0; j < XY; j++)
+                {
+
+                    if (dt.Rows[i][j].ToString() == "X") {
+                        using (StreamWriter outputFile = new StreamWriter(Path.Combine(docPath, "BDPuntos.pl"), true))
+                        {
+                            outputFile.WriteLine("punto(" + j + "," + i + ").");
+                        }
+                    }
+                }
+            }
+
         }
     }
 }

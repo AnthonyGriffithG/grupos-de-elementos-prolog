@@ -9,6 +9,7 @@ using System.Threading.Tasks;
 using System.Windows.Forms;
 using SbsSW.SwiPlCs;
 using System.IO;
+using System.Collections.ObjectModel;
 
 namespace PruebaConexión
 {   
@@ -17,27 +18,28 @@ namespace PruebaConexión
     {
 
         DataTable dt = new DataTable();
-        private int XY;
+        private int XY; 
         public List<List<int>> ListaPosiciones = new List<List<int>>();
-        
+        public List<List<List<int>>> ListaGrupos = new List<List<List<int>>>();
         public Form1()
         {
             InitializeComponent();
         }
         private void clickDataTable(object sender, DataGridViewCellEventArgs e)
         {
-
-            DataGridViewCell cell = dataGridView1.Rows[e.RowIndex].Cells[e.ColumnIndex];
-            if (cell.Value == "X")
+            if (button3.Enabled)
             {
-                cell.Value = " ";
-                cell.Style.BackColor = Color.White;
-            }
-            else
-            {
-                cell.Value = "X";
-                cell.Style.BackColor = Color.Black;
-
+                DataGridViewCell cell = dataGridView1.Rows[e.RowIndex].Cells[e.ColumnIndex];
+                if (cell.Value == "X")
+                {
+                    cell.Value = " ";
+                    cell.Style.BackColor = Color.White;
+                }
+                else
+                {
+                    cell.Value = "X";
+                    cell.Style.BackColor = Color.Black;
+                }
             }
             
         }
@@ -96,6 +98,9 @@ namespace PruebaConexión
 
         private void button1_Click_1(object sender, EventArgs e)
         {
+            button1.Enabled = false;
+            button3.Enabled = false;
+
             File.Delete("C:\\Users\\ExtremeTech Sc\\source\\repos\\PruebaConexión\\PruebaConexión\\bin\\Debug\\BDPuntos.pl");
 
             string docPath = "C:\\Users\\ExtremeTech Sc\\source\\repos\\PruebaConexión\\PruebaConexión\\bin\\Debug";
@@ -151,6 +156,8 @@ namespace PruebaConexión
 
         private void button3_Click(object sender, EventArgs e)
         {
+            button1.Enabled = false;
+            button3.Enabled = false;
             File.Delete("C:\\Users\\ExtremeTech Sc\\source\\repos\\PruebaConexión\\PruebaConexión\\bin\\Debug\\BDPuntos.pl");
 
             string docPath = "C:\\Users\\ExtremeTech Sc\\source\\repos\\PruebaConexión\\PruebaConexión\\bin\\Debug";
@@ -184,6 +191,103 @@ namespace PruebaConexión
                 }
             }
 
+        }
+
+        private void button4_Click(object sender, EventArgs e)
+        {
+            ListaGrupos.Clear();
+            String general = "";
+            for (int i = 0; i < XY; i++)
+            {
+                for (int j = 0; j < XY; j++)
+                {
+                    String puntoXY = "[" + j + "," + i + "]";
+                    if (dataGridView1.Rows[i].Cells[j].Style.BackColor == Color.Black && !general.Contains(puntoXY)) {
+                        
+                        PlQuery query = new PlQuery("final([" + j + "," + i + "],X).");
+                        foreach (PlQueryVariables z in query.SolutionVariables)
+                        {
+                            List<List<int>> ListaFinalPosiciones = new List<List<int>>();
+                            String ListaString = z["X"].ToString();
+                            general = general + ListaString;
+
+                            Console.WriteLine(ListaString);
+                            for (int Char = 0; Char < ListaString.Length; Char++)
+                            {
+                                if ((ListaString[Char] == ',') && (Char % 2 == 0))
+                                {
+                                    ListaString = ListaString.Remove(Char, 1);
+                                    ListaString = ListaString.Insert(Char, "|");
+                                }
+                            }
+                            ListaString = ListaString.Remove(ListaString.Length - 1, 1);
+                            ListaString = ListaString.Remove(0 , 1);
+
+                            String[] posiciones = ListaString.Split('|');
+                            String str1 = string.Join("|", posiciones);
+                            str1 = str1.Replace("]", "");
+                            str1 = str1.Replace("[", "");
+
+                            String[] pares = str1.Split('|');
+                            
+                            foreach (string subpar in pares)
+                            {
+                                List<int> subposicion = new List<int>();
+                                subposicion.Add((int)Char.GetNumericValue(subpar[0]));
+                                subposicion.Add((int)Char.GetNumericValue(subpar[2]));
+
+
+                                ListaFinalPosiciones.Add(subposicion);
+                            }
+
+                            ListaGrupos.Add(ListaFinalPosiciones);  
+                            
+                        }
+
+                        query.NextSolution();
+                        query.Dispose();
+                    }
+                    
+                    
+                }
+            }
+            Console.WriteLine("repetidos? " + general);
+
+
+        }
+
+        private void button5_Click(object sender, EventArgs e)
+        {
+            for (int i = 0; i < XY; i++)
+            {
+                for (int j = 0; j < XY; j++)
+                {
+                    dt.Rows[i][j] = " ";
+                    dataGridView1.Rows[i].Cells[j].Style.BackColor = Color.White;
+                    dataGridView1.Rows[i].Cells[j].Style.ForeColor = Color.White;
+
+                }
+            }
+
+            button1.Enabled = true;
+            button3.Enabled = true;
+        }
+
+        private void button6_Click(object sender, EventArgs e)
+        {
+
+            Console.WriteLine("cant grupos: " + ListaGrupos.Count);
+
+            for (int a = 0; a < ListaGrupos.Count; a++)
+            {
+                for (int b = 0; b < ListaGrupos[a].Count; b++)
+                {
+                    dataGridView1.Rows[ListaGrupos[a][b][1]].Cells[ListaGrupos[a][b][0]].Style.BackColor = Color.Red;
+                    dataGridView1.Rows[ListaGrupos[a][b][1]].Cells[ListaGrupos[a][b][0]].Style.ForeColor = Color.Red;
+
+                }
+            }
+            
         }
     }
 }

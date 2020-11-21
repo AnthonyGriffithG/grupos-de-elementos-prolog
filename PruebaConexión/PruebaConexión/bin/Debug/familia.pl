@@ -10,12 +10,10 @@ adyacente([X,Y],[X2,Y2]):- dynamic(punto/2),
 			(Y = Y2, X = B); (Y = Y2, X = A)).
 
 
-miembroAdy(Punto, [H|T]) :- adyacente(Punto,H) ; miembroAdy(Punto,T).
+mismoGrupo2(X,Y,[],_) :- adyacente(X,Y).
+mismoGrupo2(X,Y,[Alguno|Lista],Visitados) :- adyacente(X,Alguno),
+	not(member(Alguno,Visitados)),
+	mismoGrupo2(Alguno,Y,Lista,[Alguno|Visitados]).
 
 
-miembro(N,[N|_]).
-miembro(N,[_|Tail]):-
-                    miembro(N,Tail).
-
-grupo([]) :- findall([X,Y], punto(X,Y), Lista), grupos(Lista,[]).
-
+final(A,X) :- findall(B,mismoGrupo2(A,B,_,[]),Lista),sort([A|Lista],X).

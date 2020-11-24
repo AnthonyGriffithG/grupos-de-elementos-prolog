@@ -16,4 +16,5 @@ mismoGrupo2(X,Y,[Alguno|Lista],Visitados) :- adyacente(X,Alguno),
 	mismoGrupo2(Alguno,Y,Lista,[Alguno|Visitados]).
 
 
-final(A,X) :- findall([A,B],mismoGrupo2(A,B,_,[]),Lista),sort(Lista,X).
+
+final(A,X) :- findall(B,mismoGrupo2(A,B,_,[]),Lista),sort([A|Lista],X),write(X).

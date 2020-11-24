@@ -21,12 +21,14 @@ namespace PruebaConexión
         private int XY; 
         public List<List<int>> ListaPosiciones = new List<List<int>>();
         public List<List<List<int>>> ListaGrupos = new List<List<List<int>>>();
+        public string ListaGruposString = "";
         public Form1()
         {
             InitializeComponent();
         }
         private void clickDataTable(object sender, DataGridViewCellEventArgs e)
         {
+
             if (button3.Enabled)
             {
                 DataGridViewCell cell = dataGridView1.Rows[e.RowIndex].Cells[e.ColumnIndex];
@@ -60,7 +62,10 @@ namespace PruebaConexión
 
         private void button2_Click(object sender, EventArgs e)
         {
-            
+            dataGridView1.DataSource = null;
+            dt.Rows.Clear();
+            dt.Columns.Clear();
+
             int numero = (int)numericUpDown1.Value;
             XY = numero;
             dataGridView1.AutoSizeColumnsMode = DataGridViewAutoSizeColumnsMode.DisplayedCells;
@@ -82,6 +87,7 @@ namespace PruebaConexión
             dataGridView1.AllowUserToResizeColumns = false;
             dataGridView1.AllowDrop = false;
             dataGridView1.CellClick += clickDataTable;
+           
 
 
         }
@@ -116,6 +122,7 @@ namespace PruebaConexión
                 {
                     dt.Rows[i][j] = " ";
                     dataGridView1.Rows[i].Cells[j].Style.BackColor = Color.White;
+                    
 
                 }
             }
@@ -135,6 +142,7 @@ namespace PruebaConexión
                 ListaPosiciones.Add(posicion);
                 dt.Rows[x][y] = "X";
                 dataGridView1.Rows[x].Cells[y].Style.BackColor = Color.Black;
+                dataGridView1.Rows[x].Cells[y].Style.ForeColor = Color.Black;
 
             }
 
@@ -195,6 +203,7 @@ namespace PruebaConexión
 
         private void button4_Click(object sender, EventArgs e)
         {
+
             ListaGrupos.Clear();
             String general = "";
             for (int i = 0; i < XY; i++)
@@ -212,14 +221,20 @@ namespace PruebaConexión
                             general = general + ListaString;
 
                             Console.WriteLine(ListaString);
+                            int contador = 0;
                             for (int Char = 0; Char < ListaString.Length; Char++)
                             {
-                                if ((ListaString[Char] == ',') && (Char % 2 == 0))
+                                if (ListaString[Char] == ',') {
+                                    contador++;
+                                }
+                                if ((ListaString[Char] == ',') && (contador % 2 == 0))
                                 {
+                                    
                                     ListaString = ListaString.Remove(Char, 1);
                                     ListaString = ListaString.Insert(Char, "|");
                                 }
                             }
+                            
                             ListaString = ListaString.Remove(ListaString.Length - 1, 1);
                             ListaString = ListaString.Remove(0 , 1);
 
@@ -232,9 +247,15 @@ namespace PruebaConexión
                             
                             foreach (string subpar in pares)
                             {
+
+                                String[] nums = subpar.Split(',');
                                 List<int> subposicion = new List<int>();
-                                subposicion.Add((int)Char.GetNumericValue(subpar[0]));
-                                subposicion.Add((int)Char.GetNumericValue(subpar[2]));
+                                Console.WriteLine(subpar);
+                                subposicion.Add(int.Parse(nums[0]));
+                                subposicion.Add(int.Parse(nums[1]));
+                                int y = int.Parse(nums[0]);
+                                //subposicion.Add((int)Char.GetNumericValue(subpar[0]));
+                                //subposicion.Add((int)Char.GetNumericValue(subpar[2]));
 
 
                                 ListaFinalPosiciones.Add(subposicion);
@@ -243,16 +264,33 @@ namespace PruebaConexión
                             ListaGrupos.Add(ListaFinalPosiciones);  
                             
                         }
+                        
 
+                        
                         query.NextSolution();
                         query.Dispose();
                     }
                     
                     
                 }
-            }
-            Console.WriteLine("repetidos? " + general);
+                
 
+            }
+
+
+            var l1 = new List<int>() {};
+
+            foreach (var i in ListaGrupos) {
+                l1.Add(i.Count());
+            }
+            l1.Sort();
+            var g = l1.GroupBy(i => i);
+            string mensaje = "Cantidad de grupos: " + ListaGrupos.Count() + "\n";
+            foreach (var grp in g)
+            {
+                mensaje = mensaje + "Con tamaño " + grp.Key + " hay " + grp.Count() + " grupos\n";
+            }
+            MessageBox.Show(mensaje);
 
         }
 
@@ -275,19 +313,69 @@ namespace PruebaConexión
 
         private void button6_Click(object sender, EventArgs e)
         {
+            Random r = new Random();
+            
 
-            Console.WriteLine("cant grupos: " + ListaGrupos.Count);
-
+            List<Color> colores = new List<Color>();
             for (int a = 0; a < ListaGrupos.Count; a++)
             {
+                
+                Color miColor = Color.FromArgb(r.Next(0, 256), r.Next(0, 256), r.Next(0, 256));
+                colores.Add(miColor);
+
                 for (int b = 0; b < ListaGrupos[a].Count; b++)
                 {
-                    dataGridView1.Rows[ListaGrupos[a][b][1]].Cells[ListaGrupos[a][b][0]].Style.BackColor = Color.Red;
-                    dataGridView1.Rows[ListaGrupos[a][b][1]].Cells[ListaGrupos[a][b][0]].Style.ForeColor = Color.Red;
+
+                    dataGridView1.Rows[ListaGrupos[a][b][1]].Cells[ListaGrupos[a][b][0]].Style.BackColor = colores[a];
+                    dataGridView1.Rows[ListaGrupos[a][b][1]].Cells[ListaGrupos[a][b][0]].Style.ForeColor = colores[a];
 
                 }
             }
             
+        }
+
+        private void button7_Click(object sender, EventArgs e)
+        {
+            int x = 0;
+            int y = 0;
+            for (int i = 0; i < XY; i++)
+            {
+                for (int j = 0; j < XY; j++)
+                {
+                    if (dataGridView1.Rows[i].Cells[j].Selected) {
+
+                        x = j;
+                        y = i;
+                        break;
+                    }
+
+                }
+            }
+            Random r = new Random();
+            Color miColor = Color.FromArgb(r.Next(0, 256), r.Next(0, 256), r.Next(0, 256));
+            Console.WriteLine("X: " + x + " Y:" + y);
+            int tam = 0;
+            for (int a = 0; a < ListaGrupos.Count; a++)
+            {
+                for (int b = 0; b < ListaGrupos[a].Count; b++)
+                {
+                    
+                    if (ListaGrupos[a][b][1] == y && ListaGrupos[a][b][0] == x) {
+                        tam = ListaGrupos[a].Count();
+                        for (int B = 0; B < ListaGrupos[a].Count; B++)
+                        {
+                            dataGridView1.Rows[ListaGrupos[a][B][1]].Cells[ListaGrupos[a][B][0]].Style.BackColor = miColor;
+                            dataGridView1.Rows[ListaGrupos[a][B][1]].Cells[ListaGrupos[a][B][0]].Style.ForeColor = miColor;
+                        }
+                    }
+                }
+            }
+            MessageBox.Show("El grupo seleccionado tiene " + tam + " elementos.");
+        }
+
+        private void panel1_Paint(object sender, PaintEventArgs e)
+        {
+
         }
     }
 }

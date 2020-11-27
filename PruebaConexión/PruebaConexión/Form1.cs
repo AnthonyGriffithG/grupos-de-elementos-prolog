@@ -21,6 +21,7 @@ namespace PruebaConexión
         private int XY; 
         public List<List<int>> ListaPosiciones = new List<List<int>>();
         public List<List<List<int>>> ListaGrupos = new List<List<List<int>>>();
+        public List<String> listaGruposString = new List<String>();
         public string ListaGruposString = "";
         public Form1()
         {
@@ -87,7 +88,8 @@ namespace PruebaConexión
             dataGridView1.AllowUserToResizeColumns = false;
             dataGridView1.AllowDrop = false;
             dataGridView1.CellClick += clickDataTable;
-           
+            listBox1.DoubleClick += new EventHandler(ListBox1_DoubleClick);
+
 
 
         }
@@ -203,7 +205,7 @@ namespace PruebaConexión
 
         private void button4_Click(object sender, EventArgs e)
         {
-
+            listBox1.Items.Clear();
             ListaGrupos.Clear();
             String general = "";
             for (int i = 0; i < XY; i++)
@@ -261,11 +263,12 @@ namespace PruebaConexión
                                 ListaFinalPosiciones.Add(subposicion);
                             }
 
-                            ListaGrupos.Add(ListaFinalPosiciones);  
-                            
+                            ListaGrupos.Add(ListaFinalPosiciones);
+                            listaGruposString.Add(ListaString);
+                            listBox1.Items.Add(ListaString);
                         }
-                        
 
+                        
                         
                         query.NextSolution();
                         query.Dispose();
@@ -376,6 +379,33 @@ namespace PruebaConexión
         private void panel1_Paint(object sender, PaintEventArgs e)
         {
 
+        }
+
+        private void listBox1_SelectedIndexChanged_1(object sender, EventArgs e)
+        {
+
+        }
+        private void ListBox1_DoubleClick(object sender, EventArgs e)
+        {
+            for (int i = 0; i < XY; i++)
+            {
+                for (int j = 0; j < XY; j++)
+                {
+                    if (dt.Rows[i][j].ToString() == "X") {
+                        dataGridView1.Rows[i].Cells[j].Style.BackColor = Color.Black;
+                        dataGridView1.Rows[i].Cells[j].Style.ForeColor = Color.Black;
+                    }
+                }
+            }
+            if (listBox1.SelectedItem != null)
+            {
+                int indice = listBox1.SelectedIndex;
+                MessageBox.Show(indice.ToString());
+                foreach (var i in ListaGrupos[indice]) {
+                    dataGridView1.Rows[i[1]].Cells[i[0]].Style.BackColor = Color.Cyan;
+                    dataGridView1.Rows[i[1]].Cells[i[0]].Style.ForeColor = Color.Cyan;
+                }
+            }
         }
     }
 }
